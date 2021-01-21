@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TeknikKartModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Durumlar">
+    <Key>
+      <PropertyRef Name="DurumID" />
+    </Key>
+    <Property Name="DurumID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DurumName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Tasks" Relationship="Self.FK_Tasks_Durumlar" FromRole="Durumlar" ToRole="Tasks" />
+    <NavigationProperty Name="TaskStatess" Relationship="Self.FK_TaskStatess_Durumlar" FromRole="Durumlar" ToRole="TaskStatess" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Tasks">
+    <Key>
+      <PropertyRef Name="TaskID" />
+    </Key>
+    <Property Name="TaskID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TaskName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="isAcıklama" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Notlar" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="BaşlangıçTarihi" Type="DateTime" Precision="0" />
+    <Property Name="PreDate" Type="DateTime" Precision="0" />
+    <Property Name="RealDate" Type="DateTime" Precision="0" />
+    <Property Name="DurumID" Type="Int32" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Durumlar" Relationship="Self.FK_Tasks_Durumlar" FromRole="Tasks" ToRole="Durumlar" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Tasks_Users" FromRole="Tasks" ToRole="Users" />
+    <NavigationProperty Name="TaskStatess" Relationship="Self.FK_TaskStatess_Tasks" FromRole="Tasks" ToRole="TaskStatess" />
+  </EntityType>
+  <EntityType Name="TaskStatess">
+    <Key>
+      <PropertyRef Name="TaskStatesID" />
+    </Key>
+    <Property Name="TaskStatesID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TaskID" Type="Int32" />
+    <Property Name="DurumID" Type="Int32" />
+    <Property Name="Notlar" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" />
+    <Property Name="TaskStateDate" Type="DateTime" Precision="0" />
+    <Property Name="userID" Type="Int32" />
+    <NavigationProperty Name="Durumlar" Relationship="Self.FK_TaskStatess_Durumlar" FromRole="TaskStatess" ToRole="Durumlar" />
+    <NavigationProperty Name="Tasks" Relationship="Self.FK_TaskStatess_Tasks" FromRole="TaskStatess" ToRole="Tasks" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_TaskStatess_Users" FromRole="TaskStatess" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Tasks" Relationship="Self.FK_Tasks_Users" FromRole="Users" ToRole="Tasks" />
+    <NavigationProperty Name="TaskStatess" Relationship="Self.FK_TaskStatess_Users" FromRole="Users" ToRole="TaskStatess" />
+  </EntityType>
+  <Association Name="FK_Tasks_Durumlar">
+    <End Role="Durumlar" Type="Self.Durumlar" Multiplicity="1" />
+    <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Durumlar">
+        <PropertyRef Name="DurumID" />
+      </Principal>
+      <Dependent Role="Tasks">
+        <PropertyRef Name="DurumID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TaskStatess_Durumlar">
+    <End Role="Durumlar" Type="Self.Durumlar" Multiplicity="0..1" />
+    <End Role="TaskStatess" Type="Self.TaskStatess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Durumlar">
+        <PropertyRef Name="DurumID" />
+      </Principal>
+      <Dependent Role="TaskStatess">
+        <PropertyRef Name="DurumID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tasks_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Tasks">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TaskStatess_Tasks">
+    <End Role="Tasks" Type="Self.Tasks" Multiplicity="0..1" />
+    <End Role="TaskStatess" Type="Self.TaskStatess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tasks">
+        <PropertyRef Name="TaskID" />
+      </Principal>
+      <Dependent Role="TaskStatess">
+        <PropertyRef Name="TaskID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TaskStatess_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="TaskStatess" Type="Self.TaskStatess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="TaskStatess">
+        <PropertyRef Name="userID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TeknikKartEntities2" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Durumlar" EntityType="Self.Durumlar" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="Tasks" EntityType="Self.Tasks" />
+    <EntitySet Name="TaskStatess" EntityType="Self.TaskStatess" />
+    <EntitySet Name="Users" EntityType="Self.Users" />
+    <AssociationSet Name="FK_Tasks_Durumlar" Association="Self.FK_Tasks_Durumlar">
+      <End Role="Durumlar" EntitySet="Durumlar" />
+      <End Role="Tasks" EntitySet="Tasks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TaskStatess_Durumlar" Association="Self.FK_TaskStatess_Durumlar">
+      <End Role="Durumlar" EntitySet="Durumlar" />
+      <End Role="TaskStatess" EntitySet="TaskStatess" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tasks_Users" Association="Self.FK_Tasks_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Tasks" EntitySet="Tasks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TaskStatess_Tasks" Association="Self.FK_TaskStatess_Tasks">
+      <End Role="Tasks" EntitySet="Tasks" />
+      <End Role="TaskStatess" EntitySet="TaskStatess" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TaskStatess_Users" Association="Self.FK_TaskStatess_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="TaskStatess" EntitySet="TaskStatess" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
